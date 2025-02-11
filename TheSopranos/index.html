@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abler - AI Accessibility</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/p5.speech@0.0.2/p5.speech.js"></script>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            text-align: center;
+        }
+
+        canvas {
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Abler - AI Accessibility</h1>
+    <p>Object Detection, Gesture Control & Speech Recognition</p>
+
+    <div id="videoContainer"></div>
+
+    <h2>Speech Recognition</h2>
+    <button class="btn btn-primary" onclick="startSpeechRecognition()">Start Listening</button>
+    <button class="btn btn-danger" onclick="stopSpeechRecognition()">Stop Listening</button>
+    <p id="recognitionStatus">Status: Not Listening</p>
+    <p id="speechOutput"></p>
+
+    <h2>Text to Speech</h2>
+    <input type="text" id="textInput" class="form-control w-50 mx-auto" placeholder="Enter text">
+    <button class="btn btn-success mt-2" onclick="textToSpeech()">Speak</button>
+
+    <script>
+        let video, objectDetector, handpose;
+        let objects = [];
+        let predictions = [];
+        let label = "Detecting...";
+        let recognizing = false;
+        let speechRecognizer, speechSynth;
+
+        function setup() {
+            let canvas = createCanvas(640, 480);
+            canvas.parent('videoContainer');
+
+            video = createCapture(VIDEO);
+            video.size(640, 480);
+            video.hide();
+
+            handpose = ml5.handpose(video, modelReady);
+            handpose.on("predict", results => predictions = results);
+
+            objectDetector = ml5.objectDetector('cocossd', modelReady);
+            detectObjects();
+
+            speechSynth = window.speechSynthesis;
+
+            // Delay the initialization of the speechRecognizer to ensure p5.speech is loaded
+            setTimeout(() => {
+                speechRecognizer = new p5.SpeechRec('en-US', speechRecognized);
+                speechRecognizer.continuous = true;
+                speechRecognizer.interimResults = true;
+            }, 1000);
+        }
+
+        function draw() {
+            image(video, 0, 0, width, height);
+
+            // Display detected objects
+            for (let obj of objects) {
+                noFill();
+                stroke(0, 255, 0);
+                rect(obj.x, obj.y, obj.width, obj.height);
+                fill(0, 255, 0);
+                textSize(16);
+                text(obj.label, obj.x, obj.y - 5);
+            }
+
+            // Display gesture points
+            for (let pred of predictions) {
+                for (let keypoint of pred.landmarks) {
+                    fill(255, 0, 0);
+                    ellipse(keypoint[0], keypoint[1], 10, 10);
+                }
+            }
+
+            // Display object label
+            fill(255);
+            textSize(24);
+            text(label, 10, height - 10);
+        }
+
+        function detectObjects() {
+            objectDetector.detect(video, (err, results) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    objects = results;
+                }
+                detectObjects();
+            });
+        }
+
+        function startSpeechRecognition() {
+            if (!recognizing) {
+                speechRecognizer.start();
+                recognizing = true;
+                document.getElementById('recognitionStatus').innerText = "Listening...";
+            }
+        }
+
+        function stopSpeechRecognition() {
+            if (recognizing) {
+                speechRecognizer.stop();
+                recognizing = false;
+                document.getElementById('recognitionStatus').innerText = "Stopped";
+            }
+        }
+
+        function speechRecognized() {
+            if (speechRecognizer.resultValue) {
+                document.getElementById('speechOutput').innerText = speechRecognizer.resultString;
+            }
+        }
+
+        function textToSpeech() {
+            let text = document.getElementById('textInput').value;
+            let utterance = new SpeechSynthesisUtterance(text);
+            speechSynth.speak(utterance);
+        }
+
+        function modelReady() {
+            console.log("Model Ready");
+        }
+    </script>
+
+</body>
+
+</html>
