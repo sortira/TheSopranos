@@ -5,7 +5,7 @@ def app():
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     # Streamlit title
-    st.title("Real-time Face Detection with Webcam")
+    st.title("Abler Real Time Object Detection and Depth Estimation")
 
     # Checkbox to enable or disable camera usage
     use_camera = st.checkbox("Use Camera", value=True)
@@ -49,7 +49,7 @@ def app():
                 rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
                 # Display the processed frame in Streamlit
-                frame_placeholder.image(rgb_frame, channels="RGB",use_container_width=True)
+                frame_placeholder.image(rgb_frame, channels="RGB",use_column_width=True)
 
                 # If Play/Pause button is pressed, toggle the play state
                 if play_pause_button:
