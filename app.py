@@ -1,6 +1,5 @@
 import streamlit as st
-from funcs import home, about, pipeline, object_detection, gesture_detection, speech_to_text, text_to_speech
-
+from funcs import home, about, pipeline, object_detection, gesture_detection, speech_to_text, text_to_speech, accessdb
 # Set page configuration
 st.set_page_config(page_title="AI App", layout="wide", initial_sidebar_state="collapsed")
 
@@ -22,6 +21,8 @@ with st.sidebar:
             st.session_state.page = "Speech to Text"
         if st.button("🔊 Text to Speech"):
             st.session_state.page = "Text to Speech"
+        if st.button("Accessibility Database"):
+            st.session_state.page = "Accessibility Database"
 
 # Ensure session state is initialized
 if "page" not in st.session_state:
@@ -42,3 +43,5 @@ elif st.session_state.page == "Speech to Text":
     speech_to_text.app()
 elif st.session_state.page == "Text to Speech":
     text_to_speech.app()
+elif st.session_state.page == "Accessibility Database":
+    accessdb.app()
