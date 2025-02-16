@@ -30,7 +30,7 @@ if "username" not in st.session_state:
 
 # Sidebar as a collapsible hamburger menu
 with st.sidebar:
-    st.markdown("Navigation")  # Hamburger icon
+    st.markdown("Navigation")  
     with st.expander("Menu", expanded=True):  # Expanding menu
         if st.button("🏠 Home"):
             st.session_state.page = "Home"

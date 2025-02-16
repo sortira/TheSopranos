@@ -8,6 +8,7 @@ def app():
     # Text input
     text_input = st.text_area("Enter text:")
     
+    # uses pyttsx3 to convert, sets speed to 130 for reasonable comprehension
     if st.button('Convert to Speech'):
         engine = pyttsx3.init()
         engine.setProperty("rate", 130)
