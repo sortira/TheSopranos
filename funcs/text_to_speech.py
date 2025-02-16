@@ -10,5 +10,6 @@ def app():
     
     if st.button('Convert to Speech'):
         engine = pyttsx3.init()
+        engine.setProperty("rate", 130)
         engine.say(text_input)
         engine.runAndWait()
