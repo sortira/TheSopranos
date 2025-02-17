@@ -1,5 +1,13 @@
 import streamlit as st
 import cv2
+
+def warn():
+    pygame.mixer.init()
+    pygame.mixer.music.load("warning.mp3")
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock.tick(10)
+
 def app():
 # Load pre-trained Haar Cascade for face detection (included with OpenCV)
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
