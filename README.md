@@ -1,5 +1,7 @@
 # Abler: AI-Powered Accessibility
 
+[NOTE: this code is breaking, half of the working models are on [Angshuman Roy's laptop](https://github.com/AngRoy/) which hasn't been pushed/PRed or merged because it was written 2s before the actual finals of the hackathon.] 
+
 Abler is an advanced AI-driven accessibility assistant designed to empower individuals with visual, auditory, and mobility impairments. By leveraging state-of-the-art machine learning techniques, Abler provides real-time object detection, depth estimation, gesture recognition, and speech processing, ensuring seamless interaction with the environment.
 
 ---
