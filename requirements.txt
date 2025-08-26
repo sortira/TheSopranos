@@ -1,5 +1,0 @@
-streamlit
-streamlit-audiorec
-opencv-python
-pyttsx3
-pygame
